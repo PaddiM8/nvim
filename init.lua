@@ -25,6 +25,7 @@ vim.cmd([[
     hi NonText guibg=NONE ctermbg=NONE
     hi CursorLine guibg=NONE ctermbg=NONE
     hi LineNr guibg=NONE ctermbg=NONE
+    hi PmenuSel guibg='#525252'
 
     hi link FzfLuaNormal NormalFloat
     hi link FzfLuaBorder FloatBorder
@@ -36,6 +37,21 @@ vim.cmd([[
     hi DiagnosticUnderlineWarn guisp='#eab308' gui=undercurl
     hi SatelliteDiagnosticError guifg='#b91c1c'
     hi SatelliteDiagnosticWarn guifg='#eab308'
+
+    highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
+    highlight! CmpItemAbbrMatch guibg=NONE guifg=#569cd6
+    highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
+
+    highlight! CmpItemKindVariable guibg=NONE guifg=#9cdcfE
+    highlight! link CmpItemKindInterface CmpItemKindVariable
+    highlight! link CmpItemKindText CmpItemKindVariable
+
+    highlight! CmpItemKindFunction guibg=NONE guifg=#c586c0
+    highlight! link CmpItemKindMethod CmpItemKindFunction
+
+    highlight! CmpItemKindKeyword guibg=NONE guifg=#d4d4d4
+    highlight! link CmpItemKindProperty CmpItemKindKeyword
+    highlight! link CmpItemKindUnit CmpItemKindKeyword
 
     set termguicolors
 ]])
@@ -67,20 +83,20 @@ vim.diagnostic.config({
 })
 
 -- harpoon
-local harpoon = require("harpoon")
-harpoon:setup({})
-vim.keymap.set("n", "<leader>F", harpoon:list().add)
-vim.keymap.set("n", "<leader>w", function() harpoon:list():select(1) end)
-vim.keymap.set("n", "<leader>d", function() harpoon:list():select(2) end)
-vim.keymap.set("n", "<leader>s", function() harpoon:list():select(3) end)
-vim.keymap.set("n", "<leader>a", function() harpoon:list():select(4) end)
-vim.keymap.set("n", "<leader>W", function() harpoon:list():replace_at(1) end)
-vim.keymap.set("n", "<leader>D", function() harpoon:list():replace_at(2) end)
-vim.keymap.set("n", "<leader>S", function() harpoon:list():replace_at(3) end)
-vim.keymap.set("n", "<leader>A", function() harpoon:list():replace_at(4) end)
-vim.keymap.set("n", "<leader>j", function()
-    harpoon.ui:toggle_quick_menu(harpoon:list())
-end)
+-- local harpoon = require("harpoon")
+-- harpoon:setup({})
+-- vim.keymap.set("n", "<leader>F", harpoon:list().add)
+-- vim.keymap.set("n", "<leader>w", function() harpoon:list():select(1) end)
+-- vim.keymap.set("n", "<leader>d", function() harpoon:list():select(2) end)
+-- vim.keymap.set("n", "<leader>s", function() harpoon:list():select(3) end)
+-- vim.keymap.set("n", "<leader>a", function() harpoon:list():select(4) end)
+-- vim.keymap.set("n", "<leader>W", function() harpoon:list():replace_at(1) end)
+-- vim.keymap.set("n", "<leader>D", function() harpoon:list():replace_at(2) end)
+-- vim.keymap.set("n", "<leader>S", function() harpoon:list():replace_at(3) end)
+-- vim.keymap.set("n", "<leader>A", function() harpoon:list():replace_at(4) end)
+-- vim.keymap.set("n", "<leader>j", function()
+--     harpoon.ui:toggle_quick_menu(harpoon:list())
+-- end)
 
 -- fzf
 local function current_file_dir()
@@ -107,6 +123,20 @@ vim.keymap.set("n", "<leader>f", function()
         })
     else
         fzf.files()
+    end
+end)
+vim.keymap.set("n", "<leader>d", function()
+    if file_is_in_git_repo() then
+        fzf.git_files({
+            prompt = "GitFolders❯ ",
+            cwd = current_git_repo_dir(),
+            cmd = "git ls-tree -d -r HEAD --name-only",
+        })
+    else
+        fzf.files({
+            prompt = "Folders❯ ",
+            fd_opts = "--color=never --type directory --hidden --follow --exclude .git",
+        })
     end
 end)
 vim.keymap.set("n", "<leader>F", fzf.files)
