@@ -1,0 +1,17 @@
+return {}
+-- return {
+--     {
+--         "dstein64/nvim-scrollview",
+--         opts = {
+--             diagnostics_severities = {
+--                 vim.diagnostic.severity.WARN,
+--                 vim.diagnostic.severity.ERROR,
+--             },
+--             diagnostics_error_symbol = { "-", "━", "▬" },
+--             diagnostics_warning_symbol = { "-", "━", "▬" },
+--         },
+--         config = function()
+--             setup_gitsigns()
+--         end,
+--     },
+-- }

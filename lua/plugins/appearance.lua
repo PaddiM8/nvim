@@ -1,9 +1,25 @@
 return {
     {
-        "realbucksavage/riderdark.vim",
+        dir = "~/.local/share/nvim/riderdark.vim",
     },
     {
         "catppuccin/nvim",
+    },
+    {
+        "lewis6991/satellite.nvim",
+        opts = {
+            winblend = 0,
+            handlers = {
+                diagnostic = {
+                    enable = true,
+                    signs = { "-", "━", "▬" },
+                    min_severity = vim.diagnostic.severity.WARN,
+                },
+                gitsigns = {
+                    enable = false,
+                },
+            },
+        },
     },
     {
 
