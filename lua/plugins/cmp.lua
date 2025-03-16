@@ -16,7 +16,6 @@ return {
         config = function()
             local cmp = require("cmp")
             local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-            local select_opts = { behavior = cmp.SelectBehavior.Select }
 
             cmp.event:on(
                 "confirm_done",
@@ -98,21 +97,7 @@ return {
                         return kind
                     end,
                 },
-                mapping = {
-                    ["<C-p>"] = cmp.mapping.select_prev_item(select_opts),
-                    ["<C-n>"] = cmp.mapping.select_next_item(select_opts),
-                    ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-                    ["<CR>"] = cmp.mapping.confirm({ select = false }),
-                    ["."] = cmp.mapping(function(fallback)
-                        local confirm = cmp.confirm({ select = true })
-                        if not confirm then
-                            fallback()
-                        else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(".", true, true, true), "n", true)
-                        end
-                    end, { "i", "c" }),
-                    ["("] = cmp.mapping.confirm({ select = true }),
-                }
+                mapping = require("keybinds").cmp(),
             })
         end,
     }

@@ -8,6 +8,8 @@ return {
                     border = "single",
                 },
             })
+
+            require("keybinds").fzf()
         end
     },
 }

@@ -30,6 +30,7 @@ return {
                 theme = "nord",
                 component_separators = "",
                 section_separators = "",
+                disabled_filetypes = { "toggleterm" },
             },
             sections = {
                 lualine_a = {"mode"},
@@ -41,4 +42,11 @@ return {
             },
         },
     },
+    {
+        "akinsho/toggleterm.nvim",
+        opts = {
+            start_in_insert_mode = true,
+            close_on_exit = true,
+        },
+    }
 }
