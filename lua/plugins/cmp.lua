@@ -82,9 +82,6 @@ return {
                     { name = "nvim_lsp_signature_help" },
                     { name = "nvim_lsp", keyword_length = 1 },
                 },
-                window = {
-                    documentation = cmp.config.window.bordered()
-                },
                 formatting = {
                     expandable_indicator = true,
                     fields = { "kind", "abbr", "menu" },

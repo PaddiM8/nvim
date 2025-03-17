@@ -234,6 +234,9 @@ return {
         vim.keymap.set("n", "<leader>es", function()
           dap_widgets.centered_float(dap_widgets.scopes)
         end)
+        vim.keymap.set("n", "<leader>et", function()
+          dap_widgets.centered_float(dap_widgets.threads)
+        end)
     end,
     ui = function()
         local term_util = require("util.toggleterm")
