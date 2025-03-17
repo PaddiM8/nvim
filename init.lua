@@ -78,7 +78,7 @@ vim.api.nvim_create_autocmd(
 
 -- start in insert mode in terminals
 vim.cmd[[autocmd BufWinEnter,WinEnter term://* startinsert]]
-vim.cmd[[autocmd BufWinEnter,WinEnter [dap-terminal]* startinsert]]
+vim.cmd[[autocmd BufWinEnter,WinEnter \[dap-terminal\]* startinsert]]
 
 -- highlight yanked text for 200ms using the "Visual" highlight group
 vim.cmd[[

@@ -56,65 +56,6 @@ function Monkey_patch_semantic_tokens(client)
     end
 end
 
-function attach_dap(dll_path, pid)
-    local pgrep_result = vim.system(
-        {"pgrep", "-P", pid},
-        { text = true }
-    ):wait()
-
-    local dap = require("dap")
-    local dap_config = require("dap-config.dotnet")
-    dap.run({
-        type = "coreclr",
-        name = "Program",
-        request = "attach",
-        processId = tonumber(pgrep_result.stdout),
-        env = function()
-            dap_config.get_env(dll_path)
-        end,
-        cwd = function()
-            dap_config.get_cwd(dll_path)
-        end,
-    })
-end
-
-local function run_debug(csproj_path)
-    local dotnet = require("easy-dotnet")
-    local project = require("easy-dotnet.parsers.csproj-parse")
-        .get_project_from_project_file(csproj_path)
-    local dll_path = {
-        project_name = project.name,
-        dll = project.get_dll_path(),
-        relative_project_path = vim.fs.dirname(project.path),
-    }
-
-    local toggleterm = require("toggleterm")
-    local toggleterm_terminal = require("toggleterm.terminal")
-
-    -- hide all terminals
-    for _, open_terminal in ipairs(toggleterm_terminal.get_all(false)) do
-        open_terminal:close()
-    end
-
-    -- create a new terminal running the program
-    local terminal = toggleterm_terminal.Terminal:new({
-        cmd = "dotnet " .. dll_path.dll,
-        count = 2,
-        direction = "horizontal",
-        display_name = "DebugTerminal",
-    })
-    terminal:toggle(nil, "horizontal")
-
-    local buffer_name = vim.api.nvim_buf_get_name(0)
-    local buffer_name_start = string.match(buffer_name, "term://.+/%d+")
-    local pid = string.match(buffer_name_start, "%d+$")
-
-    -- attach the dap
-    vim.defer_fn(function()
-        attach_dap(dll_path, pid)
-    end, 1750)
-end
-
 return {
     {
         dir = "~/.local/share/nvim/elk",

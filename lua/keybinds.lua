@@ -215,6 +215,9 @@ return {
         ]])
 
         vim.keymap.set("n", "§", dap.continue)
+        vim.keymap.set("n", "<C-§>", function()
+            require("util.dap").attach_dap()
+        end)
         vim.keymap.set("n", "!", dap.step_over)
         vim.keymap.set("n", '"', dap.step_into)
         vim.keymap.set("n", "#", dap.step_out)
