@@ -5,7 +5,6 @@ return {
         vim.keymap.set("n", "<C-s>", ":w<cr>")
 
         -- lsp
-        vim.keymap.set("n", "gd", vim.lsp.buf.definition)
         vim.keymap.set("n", "<leader>2", vim.lsp.buf.rename)
         vim.keymap.set("i", "<C-q>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
@@ -136,13 +135,18 @@ return {
                 desc = "Diagnostics (Trouble)",
             },
             {
-                "<leader>cl",
+                "gd",
                 "<cmd>Trouble lsp_definitions toggle focus=true<cr>",
                 desc = "LSP Definitions / references / ... (Trouble)",
             },
             {
-                "<leader>ca",
+                "gr",
                 "<cmd>Trouble lsp_references toggle focus=true<cr>",
+                desc = "LSP References / ... (Trouble)",
+            },
+            {
+                "go",
+                "<cmd>Trouble lsp_implementations toggle focus=true<cr>",
                 desc = "LSP References / ... (Trouble)",
             },
         }
