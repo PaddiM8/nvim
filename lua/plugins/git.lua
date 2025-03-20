@@ -11,4 +11,11 @@ return {
             end
         },
     },
+    {
+        "sindrets/diffview.nvim",
+        config = function()
+            require("keybinds").diffview()
+            vim.opt.fillchars:append("diff:.")
+        end,
+    },
 }

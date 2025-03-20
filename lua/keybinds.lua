@@ -1,12 +1,26 @@
+function _G.set_terminal_keymaps()
+    vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-'>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
+
+    vim.keymap.set("t", "jk", "<C-\\><C-n>")
+    vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
+    vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>")
+    vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>")
+    vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>")
+end
+
 return {
     basics = function()
         vim.keymap.set("i", "jk", "<Esc>", {})
         vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
         vim.keymap.set("n", "<C-s>", ":w<cr>")
+        vim.keymap.set("n", "<C-q>", ":tabclose<cr>")
 
         -- lsp
         vim.keymap.set("n", "<leader>2", vim.lsp.buf.rename)
-        vim.keymap.set("i", "<C-q>", vim.lsp.buf.signature_help)
+        vim.keymap.set("n", "Q", vim.lsp.buf.hover)
+        vim.keymap.set("i", "<C-e>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
         vim.keymap.set("n", "<C-p>", function()
             vim.diagnostic.goto_next({ severity = "ERROR" })
@@ -118,12 +132,12 @@ return {
 
             { "<leader>q", "<cmd>Grapple select index=1<cr>", desc = "Select tag q" },
             { "<leader>w", "<cmd>Grapple select index=2<cr>", desc = "Select tag w" },
-            { "<leader>d", "<cmd>Grapple select index=2<cr>", desc = "Select tag d" },
+            -- { "<leader>d", "<cmd>Grapple select index=2<cr>", desc = "Select tag d" },
             { "<leader>s", "<cmd>Grapple select index=3<cr>", desc = "Select tag s" },
 
             { "<leader>Q", "<cmd>Grapple tag index=1<cr>", desc = "Set tag q" },
             { "<leader>W", "<cmd>Grapple tag index=2<cr>", desc = "Set tag w" },
-            { "<leader>D", "<cmd>Grapple tag index=2<cr>", desc = "Set tag d" },
+            -- { "<leader>D", "<cmd>Grapple tag index=2<cr>", desc = "Set tag d" },
             { "<leader>S", "<cmd>Grapple tag index=3<cr>", desc = "Set tag s" },
         }
     end,
@@ -192,6 +206,11 @@ return {
                 vim.fn.line("v"),
             }
         end)
+
+        -- restore hunk in diff mode:
+        --   `do` in normal mode
+        --   `:diffget` in visual mode
+
         map("n", "<leader>hS", gitsigns.stage_buffer)
         map("n", "<leader>hR", gitsigns.reset_buffer)
         map("n", "<leader>hp", gitsigns.preview_hunk)
@@ -209,6 +228,24 @@ return {
 
         -- Text object
         map({"o", "x"}, "ih", ":<C-U>Gitsigns select_hunk<CR>")
+    end,
+    diffview = function()
+        local diffview = require("diffview")
+        vim.keymap.set("n", "<leader>hv", function()
+            vim.cmd("write")
+            diffview.open({})
+        end)
+        vim.keymap.set("n", "<leader>hf", function()
+            vim.cmd("write")
+            diffview.file_history(nil, {"%"})
+        end)
+        vim.keymap.set("n", "<leader>hF", function()
+            vim.cmd("write")
+            diffview.file_history(nil, {})
+        end)
+
+        -- useful keybinds:
+        --   zn: show entire file content
     end,
     dap = function()
         local dap = require("dap")
@@ -243,15 +280,12 @@ return {
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
         end)
-        vim.keymap.set("n", "<C-m>", function()
+        vim.keymap.set("n", "<C-'>", function()
             term_util.open_terminal(2, "DebugTerminal")
         end)
-        vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
+        vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
 
-        vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
-        vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>")
-        vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>")
-        vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>")
+        vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
         vim.keymap.set("n", "<C-h>", "<cmd>wincmd h<cr>")
         vim.keymap.set("n", "<C-j>", "<cmd>wincmd j<cr>")

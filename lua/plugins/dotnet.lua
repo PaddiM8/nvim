@@ -66,8 +66,9 @@ return {
         opts = {
             config = {
                 on_attach = function(client)
-                    Monkey_patch_semantic_tokens(client)
-                end
+                    -- Monkey_patch_semantic_tokens(client)
+                end,
+                filewatching = "off",
             }
         }
     },

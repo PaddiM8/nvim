@@ -18,8 +18,6 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   end
 })
 
-vim.cmd.colorscheme(vim.g.colors_name)
-
 vim.opt.relativenumber = true
 vim.opt.number = true
 vim.opt.tabstop = 4
@@ -33,6 +31,11 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.cmdheight = 2
 vim.opt.hidden = true -- for toggleterm.nvim
+vim.g.netrw_keepdir = 0
+
+-- auto save
+vim.opt.autowrite = true
+vim.cmd([[au BufLeave * silent! wall]])
 
 vim.cmd([[
     hi Normal guibg=NONE ctermbg=NONE
@@ -44,7 +47,13 @@ vim.cmd([[
     hi link FzfLuaNormal NormalFloat
     hi link FzfLuaBorder FloatBorder
 
+    " TODO: Put in theme
     hi SatelliteBar guibg=#424242
+    hi WinSeparator guifg=#313131
+    hi TabLineFill guibg=#212121
+    hi DiffDelete guibg=#181818 guifg=#424242
+    hi DiffText guibg=#757575
+    hi Folded guibg=NONE
 
     hi link @lsp.type.extensionMethod Function
     hi DiagnosticUnderlineError guisp='#b91c1c' gui=undercurl

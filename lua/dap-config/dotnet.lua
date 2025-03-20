@@ -86,14 +86,16 @@ M.register_net_dap = function()
         debug_dll = nil
     end
 
+    local config_dir = vim.fn.stdpath("config")
+    local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
+    local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
     dap.adapters.coreclr = {
         type="executable",
-        command = os.getenv("HOME") .. "/.vscode/extensions/ms-dotnettools.csharp-2.63.32-linux-x64/.debugger/vsdbg-ui",
+        command = vsdbg_path,
         args = { "--interpreter=vscode", "--engineLogging" },
         id = "coreclr",
         options = {
             internalTerminal = true,
-            --externalTerminal = true,
         },
         runInTerminal = true,
         reverse_request_handlers = {

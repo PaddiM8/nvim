@@ -1,0 +1,9 @@
+#!/usr/bin/env elk
+
+let extensionDir = "$HOME/.vscode/extensions"
+let dirName = ls ${extensionDir}
+    | where => &str::startsWith("ms-dotnettools.csharp-")
+    | sort::asc
+    | iter::last
+
+print(str::path::join(extensionDir, dirName, ".debugger", "vsdbg-ui"))
