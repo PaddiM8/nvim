@@ -48,5 +48,14 @@ return {
             start_in_insert_mode = true,
             close_on_exit = true,
         },
-    }
+    },
+    {
+        "OXY2DEV/markview.nvim",
+        lazy = false,
+        opts = {
+            preview = {
+                icon_provider = "devicons",
+            },
+        },
+    },
 }

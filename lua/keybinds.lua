@@ -122,7 +122,6 @@ return {
             ["<C-p>"] = cmp.mapping.select_prev_item(select_opts),
             ["<C-n>"] = cmp.mapping.select_next_item(select_opts),
             ["<Tab>"] = cmp.mapping.confirm({ select = true }),
-            ["<CR>"] = cmp.mapping.confirm({ select = false }),
         }
     end,
     grapple = function()
