@@ -42,12 +42,14 @@ vim.cmd([[
     hi NonText guibg=NONE ctermbg=NONE
     hi CursorLine guibg=NONE ctermbg=NONE
     hi LineNr guibg=NONE ctermbg=NONE
+    hi Pmenu guibg='#212121' guifg='#eeeeee'
     hi PmenuSel guibg='#525252'
+    hi! link NormalFloat Pmenu
+    hi! link PmenuSbar PmenuSel
 
     hi link FzfLuaNormal NormalFloat
     hi link FzfLuaBorder FloatBorder
 
-    " TODO: Put in theme
     hi SatelliteBar guibg=#424242
     hi WinSeparator guifg=#313131
     hi TabLineFill guibg=#212121
@@ -55,26 +57,29 @@ vim.cmd([[
     hi DiffText guibg=#757575
     hi Folded guibg=NONE
 
-    hi link @lsp.type.extensionMethod Function
+    hi link @lsp.type.extensionMethod @lsp.type.function
+    hi link @lsp.type.recordClass @lsp.type.class
+    hi link @lsp.type.property Constant
+    hi link @lsp.type.controlKeyword Keyword
     hi DiagnosticUnderlineError guisp='#b91c1c' gui=undercurl
     hi DiagnosticUnderlineWarn guisp='#eab308' gui=undercurl
     hi SatelliteDiagnosticError guifg='#b91c1c'
     hi SatelliteDiagnosticWarn guifg='#eab308'
 
-    highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
-    highlight! CmpItemAbbrMatch guibg=NONE guifg=#569cd6
-    highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
+    hi! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
+    hi! CmpItemAbbrMatch guibg=NONE guifg=#569cd6
+    hi! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
 
-    highlight! CmpItemKindVariable guibg=NONE guifg=#9cdcfE
-    highlight! link CmpItemKindInterface CmpItemKindVariable
-    highlight! link CmpItemKindText CmpItemKindVariable
+    hi! CmpItemKindVariable guibg=NONE guifg=#9cdcfE
+    hi! link CmpItemKindInterface CmpItemKindVariable
+    hi! link CmpItemKindText CmpItemKindVariable
 
-    highlight! CmpItemKindFunction guibg=NONE guifg=#c586c0
-    highlight! link CmpItemKindMethod CmpItemKindFunction
+    hi! CmpItemKindFunction guibg=NONE guifg=#c586c0
+    hi! link CmpItemKindMethod CmpItemKindFunction
 
-    highlight! CmpItemKindKeyword guibg=NONE guifg=#d4d4d4
-    highlight! link CmpItemKindProperty CmpItemKindKeyword
-    highlight! link CmpItemKindUnit CmpItemKindKeyword
+    hi! CmpItemKindKeyword guibg=NONE guifg=#d4d4d4
+    hi! link CmpItemKindProperty CmpItemKindKeyword
+    hi! link CmpItemKindUnit CmpItemKindKeyword
 
     set termguicolors
 ]])

@@ -1,6 +1,7 @@
 return {
     {
-        dir = "~/.local/share/nvim/riderdark.vim",
+        -- dir = "~/.local/share/nvim/riderdark.vim",
+        "realbucksavage/riderdark.vim",
     },
     {
         "catppuccin/nvim",
