@@ -86,6 +86,14 @@ M.register_net_dap = function()
         debug_dll = nil
     end
 
+    -- netcoredbg (for neotest)
+    dap.adapters.coreclr = {
+        type = "executable",
+        command = "netcoredbg",
+        args = {"--interpreter=vscode"}
+    }
+
+    -- vsdbg
     local config_dir = vim.fn.stdpath("config")
     local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
     local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)

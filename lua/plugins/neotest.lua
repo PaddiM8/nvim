@@ -26,6 +26,8 @@ return {
                     configure_dotnet(),
                 },
             })
+
+            require("keybinds").neotest()
         end
     },
 }

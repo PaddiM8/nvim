@@ -292,4 +292,53 @@ return {
         vim.keymap.set("n", "<C-k>", "<cmd>wincmd k<cr>")
         vim.keymap.set("n", "<C-l>", "<cmd>wincmd l<cr>")
     end,
+    neotest = function()
+        local neotest = require("neotest")
+
+        -- summary view
+        vim.keymap.set("n", "<leader>jv", neotest.summary.toggle)
+
+        -- output for all tests
+        vim.keymap.set("n", "<leader>jp", function()
+            neotest.output_panel.toggle()
+        end)
+
+        -- output for nearest test
+        vim.keymap.set("n", "<leader>jo", function()
+            neotest.output.open({
+                enter = true,
+            })
+        end)
+
+        -- run all
+        vim.keymap.set("n", "<leader>ja", function()
+            neotest.run.run({
+                suite = true,
+            })
+        end)
+
+        -- run the current file
+        vim.keymap.set("n", "<leader>js", function()
+            neotest.run.run({
+                vim.fn.expand("%"),
+                suite = false,
+            })
+        end)
+
+        -- debug the nearest test
+        vim.keymap.set("n", "<leader>jd", function()
+            neotest.run.run({
+                strategy = "dap",
+                suite = false,
+            })
+        end)
+
+        -- stop all
+        vim.keymap.set("n", "<leader>jq", function()
+            neotest.run.stop({
+                adapter = "dap",
+                interactive = false,
+            })
+        end)
+    end
 }
