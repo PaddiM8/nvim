@@ -3,10 +3,6 @@ return {
     "tpope/vim-surround",
     "tpope/vim-commentary",
     {
-        "max397574/better-escape.nvim",
-        opts = {},
-    },
-    {
         "cappyzawa/trim.nvim",
         opts = {
             notifications = false,

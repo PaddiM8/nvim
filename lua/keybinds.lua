@@ -3,7 +3,7 @@ function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-'>", "<cmd>ToggleTerm<cr>")
     vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
 
-    -- vim.keymap.set("t", "jk", "<C-\\><C-n>")
+    vim.keymap.set("t", "jk", "<C-\\><C-n>")
     vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
     vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>")
     vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>")
@@ -12,7 +12,7 @@ end
 
 return {
     basics = function()
-        -- vim.keymap.set("i", "jk", "<Esc>", {})
+        vim.keymap.set("i", "jk", "<Esc>", {})
         vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
         vim.keymap.set("n", "<C-s>", ":w<cr>")
         vim.keymap.set("n", "<C-q>", ":tabclose<cr>")
