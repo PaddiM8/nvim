@@ -30,8 +30,19 @@ vim.opt.buftype = ""
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.cmdheight = 2
+vim.opt.shellredir = "| append "
+vim.opt.shellpipe = "| write "
 vim.opt.hidden = true -- for toggleterm.nvim
+vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.g.netrw_keepdir = 0
+
+-- highlight yanked text for 100ms using the "Visual" highlight group
+vim.cmd[[
+    augroup highlight_yank
+    autocmd!
+    au TextYankPost * silent! lua vim.highlight.on_yank({higroup="Visual", timeout=100})
+    augroup END
+]]
 
 -- auto save
 vim.opt.autowrite = true

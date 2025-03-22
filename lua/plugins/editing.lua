@@ -1,8 +1,9 @@
 return {
+    "tpope/vim-sleuth",
     "tpope/vim-surround",
     "tpope/vim-commentary",
     {
-        "windwp/nvim-autopairs",
+        "max397574/better-escape.nvim",
         opts = {},
     },
     {

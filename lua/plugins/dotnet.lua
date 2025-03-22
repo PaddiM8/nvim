@@ -78,6 +78,14 @@ return {
             "nvim-lua/plenary.nvim",
         },
         opts = {
+            config = {
+                settings = {
+                    ["csharp|completion"] = {
+                        dotnet_show_completion_items_from_unimported_namespaces = true,
+                        dotnet_show_name_completion_suggestions = true,
+                    },
+                },
+            },
             picker = "fzf",
             terminal = function(path, action, args)
                 local dotnet = require("easy-dotnet")

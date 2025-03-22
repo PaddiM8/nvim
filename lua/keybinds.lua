@@ -3,7 +3,7 @@ function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-'>", "<cmd>ToggleTerm<cr>")
     vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
 
-    vim.keymap.set("t", "jk", "<C-\\><C-n>")
+    -- vim.keymap.set("t", "jk", "<C-\\><C-n>")
     vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
     vim.keymap.set("t", "<C-j>", "<cmd>wincmd j<cr>")
     vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>")
@@ -12,7 +12,7 @@ end
 
 return {
     basics = function()
-        vim.keymap.set("i", "jk", "<Esc>", {})
+        -- vim.keymap.set("i", "jk", "<Esc>", {})
         vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
         vim.keymap.set("n", "<C-s>", ":w<cr>")
         vim.keymap.set("n", "<C-q>", ":tabclose<cr>")
@@ -22,10 +22,10 @@ return {
         vim.keymap.set("n", "Q", vim.lsp.buf.hover)
         vim.keymap.set("i", "<C-e>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
-        vim.keymap.set("n", "<C-p>", function()
+        vim.keymap.set("n", "<Tab>", function()
             vim.diagnostic.goto_next({ severity = "ERROR" })
         end)
-        vim.keymap.set("n", "<C-å>", function()
+        vim.keymap.set("n", "<S-Tab>", function()
             vim.diagnostic.goto_prev({ severity = "ERROR" })
         end)
 
@@ -83,6 +83,7 @@ return {
         end)
         vim.keymap.set("n", "<leader>F", fzf.files)
         vim.keymap.set("n", "<C-.>", fzf.lsp_code_actions)
+        vim.keymap.set("n", "<leader>'", fzf.lsp_code_actions)
         vim.keymap.set("n", "<leader>g", function()
             if file_is_in_git_repo() then
                 fzf.live_grep({
@@ -339,5 +340,9 @@ return {
                 interactive = false,
             })
         end)
-    end
+    end,
+    conform = function()
+        local conform = require("conform")
+        vim.keymap.set("n", "<leader>=", conform.format)
+    end,
 }
