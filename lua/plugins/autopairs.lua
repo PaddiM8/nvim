@@ -65,4 +65,15 @@ return {
             fix_parenthesis_indentation("cs")
         end,
     },
+    {
+        "windwp/nvim-ts-autotag",
+        lazy = false,
+        opts = {
+            opts = {
+                enable_close = true,
+                enable_rename = true,
+                enable_close_on_slash = true,
+            },
+        },
+    },
 }

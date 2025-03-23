@@ -97,5 +97,5 @@ return {
                 mapping = require("keybinds").cmp(),
             })
         end,
-    }
+    },
 }

@@ -2,6 +2,8 @@ return {
     "tpope/vim-sleuth",
     "tpope/vim-surround",
     "tpope/vim-commentary",
+    "tpope/vim-vinegar",
+    "tpope/vim-eunuch",
     {
         "cappyzawa/trim.nvim",
         opts = {
