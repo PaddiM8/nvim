@@ -1,6 +1,5 @@
 function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-'>", "<cmd>ToggleTerm<cr>")
     vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
 
     vim.keymap.set("t", "jk", "<C-\\><C-n>")
@@ -82,7 +81,6 @@ return {
             end
         end)
         vim.keymap.set("n", "<leader>F", fzf.files)
-        vim.keymap.set("n", "<C-.>", fzf.lsp_code_actions)
         vim.keymap.set("n", "<leader>'", fzf.lsp_code_actions)
         vim.keymap.set("n", "<leader>g", function()
             if file_is_in_git_repo() then
@@ -103,9 +101,6 @@ return {
             fzf.lsp_document_symbols({ multiline = 2 })
         end)
         vim.keymap.set("n", "<leader>t", fzf.lsp_live_workspace_symbols)
-
-        vim.keymap.set("n", "<leader>eb", fzf.dap_breakpoints)
-        vim.keymap.set("n", "<leader>ef", fzf.dap_frames)
 
         vim.api.nvim_create_user_command("Glog", function()
             fzf.git_commits({ cwd = current_git_repo_dir() })
@@ -250,6 +245,7 @@ return {
     dap = function()
         local dap = require("dap")
         local dap_widgets = require("dap.ui.widgets")
+        local fzf = require("fzf-lua")
 
         vim.cmd([[
             autocmd FileType dap-float nnoremap <buffer><silent> q <cmd>close!<CR>
@@ -262,9 +258,14 @@ return {
         vim.keymap.set("n", "!", dap.step_over)
         vim.keymap.set("n", '"', dap.step_into)
         vim.keymap.set("n", "#", dap.step_out)
+        vim.keymap.set("n", "¤", dap.pause)
+        vim.keymap.set("n", "<leader>§", dap.terminate)
         vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
         vim.keymap.set("n", "<leader>ep", dap.repl.toggle)
         vim.keymap.set("n", "<leader>er", dap.run_last)
+
+        vim.keymap.set("n", "<leader>eb", fzf.dap_breakpoints)
+        vim.keymap.set("n", "<leader>ef", fzf.dap_frames)
 
         vim.keymap.set({"n", "v"}, "+", dap_widgets.hover)
 
@@ -280,10 +281,10 @@ return {
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
         end)
-        vim.keymap.set("n", "<C-'>", function()
+        vim.keymap.set("n", "<C-n>", function()
             term_util.open_terminal(2, "DebugTerminal")
         end)
-        vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
+        -- vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
 
         vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 

@@ -37,7 +37,7 @@ M.register_net_dap = function()
 
     local function ensure_dll()
         if debug_dll == nil then
-            debug_dll = dotnet.get_debug_dll()
+            debug_dll = dotnet.get_debug_dll(true)
         end
 
         return debug_dll
@@ -57,6 +57,7 @@ M.register_net_dap = function()
                     M.get_env(debug_dll)
                 end,
                 program = function()
+                    ensure_dll()
                     local co = coroutine.running()
                     if debug_dll == nil then
                         return
@@ -70,15 +71,6 @@ M.register_net_dap = function()
                     M.get_cwd(debug_dll)
                 end,
             },
-            {
-                type = "coreclr",
-                name = "Test",
-                request = "attach",
-                processId = function()
-                    local res = require("easy-dotnet").experimental.start_debugging_test_project()
-                    return res.process_id
-                end
-            }
         }
     end
 
@@ -87,7 +79,7 @@ M.register_net_dap = function()
     end
 
     -- netcoredbg (for neotest)
-    dap.adapters.coreclr = {
+    dap.adapters.netcoredbg = {
         type = "executable",
         command = "netcoredbg",
         args = {"--interpreter=vscode"}

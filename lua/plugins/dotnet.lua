@@ -134,9 +134,14 @@ return {
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
+        branch = "feat/debug-default",
         opts = {
             picker = "fzf",
-            terminal = configure_terminal,
+            auto_bootstrap_namespace = {
+                type = "file_scoped",
+                enabled = true
+            },
+            -- terminal = configure_terminal,
         },
     },
 }
