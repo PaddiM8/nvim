@@ -46,7 +46,7 @@ M.register_net_dap = function()
     for _, value in ipairs({ "cs", "fsharp" }) do
         dap.configurations[value] = {
             {
-                type = "coreclr",
+                type = "vsdbg",
                 name = "Program",
                 request = "launch",
                 clientID = "vscode",
@@ -89,7 +89,7 @@ M.register_net_dap = function()
     local config_dir = vim.fn.stdpath("config")
     local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
     local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
-    dap.adapters.coreclr = {
+    dap.adapters.vsdbg = {
         type="executable",
         command = vsdbg_path,
         args = { "--interpreter=vscode", "--engineLogging" },
