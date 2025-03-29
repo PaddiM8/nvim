@@ -120,10 +120,17 @@ return {
                     -- Monkey_patch_semantic_tokens(client)
                 end,
                 filewatching = "off",
+                config = {
+                    filetypes = {"cs", "fs"},
+                },
                 settings = {
                     ["csharp|completion"] = {
                         dotnet_show_completion_items_from_unimported_namespaces = true,
                         dotnet_show_name_completion_suggestions = true,
+                    },
+                    ["csharp|background_analysis"] = {
+                        dotnet_analyzer_diagnostics_scope = "openFiles",
+                        dotnet_compiler_diagnostics_scope = "fullSolution",
                     },
                 },
             },
@@ -134,14 +141,12 @@ return {
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
-        branch = "feat/debug-default",
         opts = {
             picker = "fzf",
             auto_bootstrap_namespace = {
                 type = "file_scoped",
                 enabled = true
             },
-            -- terminal = configure_terminal,
         },
     },
 }

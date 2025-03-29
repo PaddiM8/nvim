@@ -29,12 +29,14 @@ vim.opt.fillchars = {eob = " "}
 vim.opt.buftype = ""
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
-vim.opt.cmdheight = 2
+vim.opt.cmdheight = 1
 vim.opt.shellredir = "| append "
 vim.opt.shellpipe = "| write "
 vim.opt.hidden = true -- for toggleterm.nvim
 vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.g.netrw_keepdir = 0
+
+vim.cmd[[set messagesopt=wait:5000,history:500]]
 
 -- highlight yanked text for 100ms using the "Visual" highlight group
 vim.cmd[[
@@ -53,10 +55,10 @@ vim.cmd([[
     hi NonText guibg=NONE ctermbg=NONE
     hi CursorLine guibg=NONE ctermbg=NONE
     hi LineNr guibg=NONE ctermbg=NONE
-    hi Pmenu guibg='#212121' guifg='#eeeeee'
-    hi PmenuSel guibg='#525252'
+    hi! Pmenu guibg=#212121 guifg=#eeeeee
+    hi! PmenuSel guifg=#525252
+    hi! PmenuSbar guibg=#525252
     hi! link NormalFloat Pmenu
-    hi! link PmenuSbar PmenuSel
 
     hi link FzfLuaNormal NormalFloat
     hi link FzfLuaBorder FloatBorder
@@ -68,14 +70,15 @@ vim.cmd([[
     hi DiffText guibg=#757575
     hi Folded guibg=NONE
 
+    highlight LspCodeLens guifg=#555555
     hi link @lsp.type.extensionMethod @lsp.type.function
     hi link @lsp.type.recordClass @lsp.type.class
     hi link @lsp.type.property Constant
     hi link @lsp.type.controlKeyword Keyword
-    hi DiagnosticUnderlineError guisp='#b91c1c' gui=undercurl
-    hi DiagnosticUnderlineWarn guisp='#eab308' gui=undercurl
-    hi SatelliteDiagnosticError guifg='#b91c1c'
-    hi SatelliteDiagnosticWarn guifg='#eab308'
+    hi DiagnosticUnderlineError guisp=#b91c1c gui=undercurl
+    hi DiagnosticUnderlineWarn guisp=#eab308 gui=undercurl
+    hi SatelliteDiagnosticError guifg=#b91c1c
+    hi SatelliteDiagnosticWarn guifg=#eab308
 
     hi! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
     hi! CmpItemAbbrMatch guibg=NONE guifg=#569cd6

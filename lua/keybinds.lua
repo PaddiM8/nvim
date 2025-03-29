@@ -1,6 +1,6 @@
 function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-h>", "<cmd>ToggleTerm<cr>")
 
     vim.keymap.set("t", "jk", "<C-\\><C-n>")
     vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
@@ -21,12 +21,6 @@ return {
         vim.keymap.set("n", "Q", vim.lsp.buf.hover)
         vim.keymap.set("i", "<C-e>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
-        vim.keymap.set("n", "<Tab>", function()
-            vim.diagnostic.goto_next({ severity = "ERROR" })
-        end)
-        vim.keymap.set("n", "<S-Tab>", function()
-            vim.diagnostic.goto_prev({ severity = "ERROR" })
-        end)
 
         vim.diagnostic.config({
             underline = {
@@ -101,6 +95,7 @@ return {
             fzf.lsp_document_symbols({ multiline = 2 })
         end)
         vim.keymap.set("n", "<leader>t", fzf.lsp_live_workspace_symbols)
+        vim.keymap.set("n", "<leader>T", fzf.lsp_document_symbols)
 
         vim.api.nvim_create_user_command("Glog", function()
             fzf.git_commits({ cwd = current_git_repo_dir() })
@@ -281,7 +276,7 @@ return {
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
         end)
-        vim.keymap.set("n", "<C-n>", function()
+        vim.keymap.set("n", "<C-h>", function()
             term_util.open_terminal(2, "DebugTerminal")
         end)
         -- vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
