@@ -1,6 +1,7 @@
 function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-h>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-x>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-z>", "<cmd>ToggleTerm<cr>")
 
     vim.keymap.set("t", "jk", "<C-\\><C-n>")
     vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
@@ -120,15 +121,15 @@ return {
             { "<leader>F", "<cmd>Grapple toggle<cr>", desc = "Tag a file" },
             { "<leader>j", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
 
-            { "<leader>q", "<cmd>Grapple select index=1<cr>", desc = "Select tag q" },
-            { "<leader>w", "<cmd>Grapple select index=2<cr>", desc = "Select tag w" },
+            { "<leader>q", "<cmd>Grapple select name=q<cr>", desc = "Select tag q" },
+            { "<leader>w", "<cmd>Grapple select name=w<cr>", desc = "Select tag w" },
             -- { "<leader>d", "<cmd>Grapple select index=2<cr>", desc = "Select tag d" },
-            { "<leader>s", "<cmd>Grapple select index=3<cr>", desc = "Select tag s" },
+            { "<leader>s", "<cmd>Grapple select name=s<cr>", desc = "Select tag s" },
 
-            { "<leader>Q", "<cmd>Grapple tag index=1<cr>", desc = "Set tag q" },
-            { "<leader>W", "<cmd>Grapple tag index=2<cr>", desc = "Set tag w" },
+            { "<leader>Q", "<cmd>Grapple tag name=q<cr>", desc = "Set tag q" },
+            { "<leader>W", "<cmd>Grapple tag name=w<cr>", desc = "Set tag w" },
             -- { "<leader>D", "<cmd>Grapple tag index=2<cr>", desc = "Set tag d" },
-            { "<leader>S", "<cmd>Grapple tag index=3<cr>", desc = "Set tag s" },
+            { "<leader>S", "<cmd>Grapple tag name=s<cr>", desc = "Set tag s" },
         }
     end,
     trouble = function()
@@ -165,7 +166,7 @@ return {
         end
 
         -- Navigation
-        map("n", "<C-z>", function()
+        map("n", "<leader>z", function()
             if vim.wo.diff then
                 vim.cmd.normal({"]c", bang = true})
             else
@@ -173,7 +174,7 @@ return {
             end
         end)
 
-        map("n", "<C-x>", function()
+        map("n", "<leader>x", function()
             if vim.wo.diff then
                 vim.cmd.normal({"[c", bang = true})
             else
@@ -276,10 +277,10 @@ return {
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
         end)
-        vim.keymap.set("n", "<C-h>", function()
+        vim.keymap.set("n", "<C-x>", function()
             term_util.open_terminal(2, "DebugTerminal")
         end)
-        -- vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
+        vim.keymap.set("n", "<C-z>", "<cmd>ToggleTerm count=1 direction=float<cr>")
 
         vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
