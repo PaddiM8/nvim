@@ -30,6 +30,26 @@ M.get_cwd = function(dll)
     return dll.relative_project_path
 end
 
+M.get_args = function(dll)
+    local launch_settings = dll.relative_project_path .. "/Properties" .. "/launchSettings.json"
+      local stat = vim.loop.fs_stat(launch_settings)
+      if stat == nil then
+          return nil
+      end
+
+      local success, result = pcall(vim.fn.json_decode, vim.fn.readfile(launch_settings, ""))
+      if not success then
+          return nil
+      end
+
+      local launch_profile = result.profiles[project_name]
+      if launch_profile == nil then
+          return nil
+      end
+
+      return vim.split(launch_profile.commandLineArgs, " +")
+end
+
 M.register_net_dap = function()
     local dap = require("dap")
     local dotnet = require("easy-dotnet")
@@ -54,7 +74,7 @@ M.register_net_dap = function()
                 console = "integratedTerminal",
                 env = function()
                     ensure_dll()
-                    M.get_env(debug_dll)
+                    return M.get_env(debug_dll)
                 end,
                 program = function()
                     ensure_dll()
@@ -68,7 +88,11 @@ M.register_net_dap = function()
                 end,
                 cwd = function()
                     ensure_dll()
-                    M.get_cwd(debug_dll)
+                    return M.get_cwd(debug_dll)
+                end,
+                args = function()
+                    ensure_dll()
+                    return M.get_args(debug_dll)
                 end,
             },
         }

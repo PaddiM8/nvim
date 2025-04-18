@@ -29,14 +29,14 @@ vim.opt.fillchars = {eob = " "}
 vim.opt.buftype = ""
 vim.opt.hlsearch = false
 vim.opt.incsearch = true
-vim.opt.cmdheight = 1
+vim.opt.cmdheight = 2
 vim.opt.shellredir = "| append "
 vim.opt.shellpipe = "| write "
 vim.opt.hidden = true -- for toggleterm.nvim
 vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.g.netrw_keepdir = 0
 
-vim.cmd[[set messagesopt=wait:5000,history:500]]
+-- vim.cmd[[set messagesopt=wait:5000,history:500]]
 
 -- highlight yanked text for 100ms using the "Visual" highlight group
 vim.cmd[[

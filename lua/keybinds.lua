@@ -23,6 +23,18 @@ return {
         vim.keymap.set("i", "<C-e>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
 
+        vim.keymap.set("n", "<leader>X", function()
+          vim.diagnostic.goto_next({
+              severity = vim.diagnostic.severity.ERROR,
+          })
+        end)
+
+        vim.keymap.set("n", "<leader>Z", function()
+          vim.diagnostic.goto_prev({
+              severity = vim.diagnostic.severity.ERROR,
+          })
+        end)
+
         vim.diagnostic.config({
             underline = {
                 severity = { min = vim.diagnostic.severity.INFO }
@@ -95,8 +107,8 @@ return {
         vim.keymap.set("n", "<leader>r", function()
             fzf.lsp_document_symbols({ multiline = 2 })
         end)
-        vim.keymap.set("n", "<leader>t", fzf.lsp_live_workspace_symbols)
-        vim.keymap.set("n", "<leader>T", fzf.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>t", fzf.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>T", fzf.lsp_live_workspace_symbols)
 
         vim.api.nvim_create_user_command("Glog", function()
             fzf.git_commits({ cwd = current_git_repo_dir() })
@@ -166,7 +178,7 @@ return {
         end
 
         -- Navigation
-        map("n", "<leader>z", function()
+        map("n", "<leader>x", function()
             if vim.wo.diff then
                 vim.cmd.normal({"]c", bang = true})
             else
@@ -174,7 +186,7 @@ return {
             end
         end)
 
-        map("n", "<leader>x", function()
+        map("n", "<leader>z", function()
             if vim.wo.diff then
                 vim.cmd.normal({"[c", bang = true})
             else
