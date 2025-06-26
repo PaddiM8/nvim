@@ -1,22 +1,27 @@
 local M = {}
 
 --- Rebuilds the project before starting the debug session
----@param co thread
-local function rebuild_project(co, path)
-    local spinner = require("easy-dotnet.ui-modules.spinner").new()
-    spinner:start_spinner("Building")
-    vim.fn.jobstart(string.format("dotnet build %s", path), {
-        on_exit = function(_, return_code)
-            if return_code == 0 then
-                spinner:stop_spinner("Built successfully")
-            else
-                spinner:stop_spinner("Build failed with exit code " .. return_code, vim.log.levels.ERROR)
-                error("Build failed")
-            end
-            coroutine.resume(co)
-        end,
-    })
-    coroutine.yield()
+local function rebuild_project()
+    vim.cmd("silent make")
+
+    -- Check for any error quickfix list entries
+    local qflist = vim.fn.getqflist()
+    local error_count = 0
+    for _, item in ipairs(qflist) do
+        if item.type == "e" then
+            error_count = error_count + 1
+        end
+    end
+
+    if error_count > 0 then
+        if error_count > 1 then
+            vim.cmd("copen")
+        end
+
+        return false
+    end
+
+    return true
 end
 
 M.get_env = function(dll)
@@ -78,12 +83,14 @@ M.register_net_dap = function()
                 end,
                 program = function()
                     ensure_dll()
-                    local co = coroutine.running()
                     if debug_dll == nil then
                         return
                     end
 
-                    rebuild_project(co, debug_dll.project_path)
+                    if not rebuild_project() then
+                        return dap.ABORT
+                    end
+
                     return debug_dll.relative_dll_path
                 end,
                 cwd = function()

@@ -93,7 +93,8 @@ return {
             if file_is_in_git_repo() then
                 fzf.live_grep({
                     multiline = 2,
-                    cmd = "git grep --line-number --column --color=always",
+                    --cmd = "git grep --line-number --column --color=always --no-index",
+                    cmd = "rg --with-filename --line-number --column --color=always",
                     cwd = current_git_repo_dir(),
                 })
             else

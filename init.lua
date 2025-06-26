@@ -34,7 +34,8 @@ vim.opt.shellredir = "| append "
 vim.opt.shellpipe = "| write "
 vim.opt.hidden = true -- for toggleterm.nvim
 vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
-vim.g.netrw_keepdir = 0
+vim.opt.smartindent = false
+vim.g.netrw_keepdir = 1
 
 -- vim.cmd[[set messagesopt=wait:5000,history:500]]
 
@@ -49,6 +50,13 @@ vim.cmd[[
 -- auto save
 vim.opt.autowrite = true
 vim.cmd([[au BufLeave * silent! wall]])
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "cs",
+    callback = function()
+        vim.cmd("compiler dotnet")
+    end,
+})
 
 vim.cmd([[
     hi Normal guibg=NONE ctermbg=NONE
