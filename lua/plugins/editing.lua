@@ -2,8 +2,19 @@ return {
     "tpope/vim-sleuth",
     "tpope/vim-surround",
     "tpope/vim-commentary",
-    "tpope/vim-vinegar",
     "tpope/vim-eunuch",
+    {
+        "stevearc/oil.nvim",
+        ---@module 'oil'
+        opts = {},
+        dependencies = {
+            {
+                "nvim-tree/nvim-web-devicons",
+                opts = {},
+            },
+        },
+        lazy = false,
+    },
     {
         "cappyzawa/trim.nvim",
         opts = {

@@ -13,7 +13,8 @@ end
 return {
     basics = function()
         vim.keymap.set("i", "jk", "<Esc>", {})
-        vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
+        -- vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
+        vim.keymap.set("n", "<C-a>", "<CMD>Oil<CR>")
         vim.keymap.set("n", "<C-s>", ":w<cr>")
         vim.keymap.set("n", "<C-q>", ":tabclose<cr>")
 
