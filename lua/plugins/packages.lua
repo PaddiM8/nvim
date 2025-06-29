@@ -10,7 +10,6 @@ return {
             ensure_installed = {
                 "prettierd",
                 "xmlformatter",
-                "rustfmt",
                 "fixjson",
             },
         })

@@ -24,7 +24,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
 vim.opt.wrap = false
-vim.cmd([[colorscheme riderdark]])
+ vim.cmd([[colorscheme riderdark]])
 vim.opt.fillchars = {eob = " "}
 vim.opt.buftype = ""
 vim.opt.hlsearch = false

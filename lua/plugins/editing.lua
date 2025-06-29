@@ -5,8 +5,6 @@ return {
     "tpope/vim-eunuch",
     {
         "stevearc/oil.nvim",
-        ---@module 'oil'
-        opts = {},
         dependencies = {
             {
                 "nvim-tree/nvim-web-devicons",
@@ -14,10 +12,15 @@ return {
             },
         },
         lazy = false,
+        opts = {
+            keymaps = require("keybinds").oil(),
+            use_default_keymaps = false,
+        }
     },
     {
         "cappyzawa/trim.nvim",
         opts = {
+            ft_blocklist = { "oil" },
             notifications = false,
             highlight = true,
         },
@@ -33,7 +36,6 @@ return {
         config = function()
             require("conform").setup({
                 formatters_by_ft = {
-                    rust = { "rustfmt", lsp_format = "fallback" },
                     javascript = { "prettierd", "prettier", stop_after_first = true },
                     html = { "xmlformatter" },
                     xml = { "xmlformatter" },

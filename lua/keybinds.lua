@@ -356,4 +356,14 @@ return {
         local conform = require("conform")
         vim.keymap.set("n", "<leader>=", conform.format)
     end,
+    oil = function()
+        return {
+            ["g?"] = { "actions.show_help", mode = "n" },
+            ["<CR>"] = "actions.select",
+            ["<C-c>"] = { "actions.close", mode = "n" },
+            ["<C-l>"] = "actions.refresh",
+            ["-"] = { "actions.parent", mode = "n" },
+            ["g."] = { "actions.toggle_hidden", mode = "n" },
+        }
+    end,
 }
