@@ -4,20 +4,6 @@ return {
     "tpope/vim-commentary",
     "tpope/vim-eunuch",
     {
-        "stevearc/oil.nvim",
-        dependencies = {
-            {
-                "nvim-tree/nvim-web-devicons",
-                opts = {},
-            },
-        },
-        lazy = false,
-        opts = {
-            keymaps = require("keybinds").oil(),
-            use_default_keymaps = false,
-        }
-    },
-    {
         "cappyzawa/trim.nvim",
         opts = {
             ft_blocklist = { "oil" },
