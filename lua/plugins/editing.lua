@@ -1,16 +1,8 @@
 return {
     "tpope/vim-sleuth",
     "tpope/vim-surround",
-    "tpope/vim-commentary",
     "tpope/vim-eunuch",
-    {
-        "cappyzawa/trim.nvim",
-        opts = {
-            ft_blocklist = { "oil" },
-            notifications = false,
-            highlight = true,
-        },
-    },
+    "thirtythreeforty/lessspace.vim",
     {
         "folke/trouble.nvim",
         opts = {},
