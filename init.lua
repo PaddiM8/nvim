@@ -37,7 +37,15 @@ vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.opt.smartindent = false
 vim.g.netrw_keepdir = 1
 
--- vim.cmd[[set messagesopt=wait:5000,history:500]]
+-- disable automatic comments on newline
+vim.api.nvim_create_autocmd(
+    "BufEnter",
+    {
+        callback = function()
+            vim.opt.formatoptions = vim.opt.formatoptions - { "c","r","o" }
+        end,
+    }
+)
 
 -- highlight yanked text for 100ms using the "Visual" highlight group
 vim.cmd[[
