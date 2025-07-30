@@ -37,6 +37,8 @@ vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.opt.smartindent = false
 vim.g.netrw_keepdir = 1
 
+vim.g.lessspace_blacklist = { "diff", "md" };
+
 -- disable automatic comments on newline
 vim.api.nvim_create_autocmd(
     "BufEnter",
