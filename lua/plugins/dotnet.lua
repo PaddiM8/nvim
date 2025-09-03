@@ -81,12 +81,13 @@ local function configure_terminal(path, action, args)
         end
     }
 
-    local relative_solution_path = require("easy-dotnet")
-        .try_get_selected_solution()
-        .path
-    local solution_path = vim.fn.getcwd() .. "/" .. vim.fs.dirname(relative_solution_path)
+    -- local relative_solution_path = require("easy-dotnet")
+    --     .try_get_selected_solution()
+    --     .path
+    -- local solution_path = vim.fn.getcwd() .. "/" .. vim.fs.dirname(relative_solution_path)
 
     local command = commands[action]() .. "\r"
+    command = command:gsub("%s+$", "")
     local task = require("overseer").new_task({
         strategy = {
             "toggleterm",
@@ -97,7 +98,7 @@ local function configure_terminal(path, action, args)
         },
         name = action,
         cmd = command,
-        cwd = solution_path,
+        cwd = dll_path.relative_project_path,
         components = {
             { "on_complete_dispose", timeout = 30 },
             "default",
