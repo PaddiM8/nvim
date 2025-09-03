@@ -12,6 +12,12 @@ return {
             "onsails/lspkind.nvim",
             "windwp/nvim-autopairs",
             "dcampos/cmp-snippy",
+            {
+                "xzbdmw/colorful-menu.nvim",
+                opts = {
+                    max_width = 35,
+                },
+            },
         },
         config = function()
             local cmp = require("cmp")
@@ -21,20 +27,6 @@ return {
                 "confirm_done",
                 cmp_autopairs.on_confirm_done()
             )
-
-            formatting = {
-                format = function(entry, vim_item)
-                    if vim.tbl_contains({ "path" }, entry.source.name) then
-                        local icon, hl_group = require("nvim-web-devicons").get_icon(entry:get_completion_item().label)
-                        if icon then
-                            vim_item.kind = icon
-                            vim_item.kind_hl_group = hl_group
-                            return vim_item
-                        end
-                    end
-                    return require("lspkind").cmp_format({ with_text = false })(entry, vim_item)
-                end
-            }
 
             --- https://github.com/MariaSolOs/dotfiles/blob/main/.config/nvim/lua/plugins/nvim-cmp.lua
             require("cmp.entry").get_documentation = function(self)
@@ -85,14 +77,22 @@ return {
                 formatting = {
                     expandable_indicator = true,
                     fields = { "kind", "abbr", "menu" },
-                    format = function(entry, vim_item)
-                        local kind = require("lspkind").cmp_format({ mode = "symbol_text", maxwidth = 50 })(entry, vim_item)
-                        local strings = vim.split(kind.kind, "%s", { trimempty = true })
-                        kind.kind = " " .. (strings[1] or "") .. " "
-                        kind.menu = "    (" .. (strings[2] or "") .. ")"
+                    format = (function()
+                        return function(entry, vim_item)
+                            local highlights_info = require("colorful-menu").cmp_highlights(entry)
+                            if highlights_info then
+                                vim_item.abbr_hl_group = highlights_info.highlights
+                                vim_item.abbr = highlights_info.text
+                            end
 
-                        return kind
-                    end,
+                            local kind = require("lspkind").cmp_format({ mode = "symbol", maxwidth = 35 })(entry, vim_item)
+                            local strings = vim.split(kind.kind, "%s", { trimempty = true })
+                            kind.kind = " " .. (strings[1] or "") .. " "
+                            kind.menu = ""
+
+                            return kind
+                        end
+                    end)(),
                 },
                 mapping = require("keybinds").cmp(),
             })

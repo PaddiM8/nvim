@@ -1,7 +1,7 @@
 function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-'>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-n>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-x>", "<cmd>ToggleTerm<cr>")
+    vim.keymap.set("t", "<C-z>", "<cmd>ToggleTerm<cr>")
 
     vim.keymap.set("t", "jk", "<C-\\><C-n>")
     vim.keymap.set("t", "<C-h>", "<cmd>wincmd h<cr>")
@@ -13,7 +13,8 @@ end
 return {
     basics = function()
         vim.keymap.set("i", "jk", "<Esc>", {})
-        vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
+        -- vim.keymap.set("n", "<C-a>", vim.cmd.Ex)
+        vim.keymap.set("n", "<C-a>", "<CMD>Oil<CR>")
         vim.keymap.set("n", "<C-s>", ":w<cr>")
         vim.keymap.set("n", "<C-q>", ":tabclose<cr>")
 
@@ -22,11 +23,17 @@ return {
         vim.keymap.set("n", "Q", vim.lsp.buf.hover)
         vim.keymap.set("i", "<C-e>", vim.lsp.buf.signature_help)
         vim.keymap.set("n", "W", vim.diagnostic.open_float)
-        vim.keymap.set("n", "<Tab>", function()
-            vim.diagnostic.goto_next({ severity = "ERROR" })
+
+        vim.keymap.set("n", "<leader>X", function()
+          vim.diagnostic.goto_next({
+              severity = vim.diagnostic.severity.ERROR,
+          })
         end)
-        vim.keymap.set("n", "<S-Tab>", function()
-            vim.diagnostic.goto_prev({ severity = "ERROR" })
+
+        vim.keymap.set("n", "<leader>Z", function()
+          vim.diagnostic.goto_prev({
+              severity = vim.diagnostic.severity.ERROR,
+          })
         end)
 
         vim.diagnostic.config({
@@ -82,13 +89,13 @@ return {
             end
         end)
         vim.keymap.set("n", "<leader>F", fzf.files)
-        vim.keymap.set("n", "<C-.>", fzf.lsp_code_actions)
         vim.keymap.set("n", "<leader>'", fzf.lsp_code_actions)
         vim.keymap.set("n", "<leader>g", function()
             if file_is_in_git_repo() then
                 fzf.live_grep({
                     multiline = 2,
-                    cmd = "git grep --line-number --column --color=always",
+                    --cmd = "git grep --line-number --column --color=always --no-index",
+                    cmd = "rg --with-filename --line-number --column --color=always",
                     cwd = current_git_repo_dir(),
                 })
             else
@@ -102,10 +109,8 @@ return {
         vim.keymap.set("n", "<leader>r", function()
             fzf.lsp_document_symbols({ multiline = 2 })
         end)
-        vim.keymap.set("n", "<leader>t", fzf.lsp_live_workspace_symbols)
-
-        vim.keymap.set("n", "<leader>eb", fzf.dap_breakpoints)
-        vim.keymap.set("n", "<leader>ef", fzf.dap_frames)
+        vim.keymap.set("n", "<leader>t", fzf.lsp_document_symbols)
+        vim.keymap.set("n", "<leader>T", fzf.lsp_live_workspace_symbols)
 
         vim.api.nvim_create_user_command("Glog", function()
             fzf.git_commits({ cwd = current_git_repo_dir() })
@@ -130,15 +135,15 @@ return {
             { "<leader>F", "<cmd>Grapple toggle<cr>", desc = "Tag a file" },
             { "<leader>j", "<cmd>Grapple toggle_tags<cr>", desc = "Toggle tags menu" },
 
-            { "<leader>q", "<cmd>Grapple select index=1<cr>", desc = "Select tag q" },
-            { "<leader>w", "<cmd>Grapple select index=2<cr>", desc = "Select tag w" },
+            { "<leader>q", "<cmd>Grapple select name=q<cr>", desc = "Select tag q" },
+            { "<leader>w", "<cmd>Grapple select name=w<cr>", desc = "Select tag w" },
             -- { "<leader>d", "<cmd>Grapple select index=2<cr>", desc = "Select tag d" },
-            { "<leader>s", "<cmd>Grapple select index=3<cr>", desc = "Select tag s" },
+            { "<leader>s", "<cmd>Grapple select name=s<cr>", desc = "Select tag s" },
 
-            { "<leader>Q", "<cmd>Grapple tag index=1<cr>", desc = "Set tag q" },
-            { "<leader>W", "<cmd>Grapple tag index=2<cr>", desc = "Set tag w" },
+            { "<leader>Q", "<cmd>Grapple tag name=q<cr>", desc = "Set tag q" },
+            { "<leader>W", "<cmd>Grapple tag name=w<cr>", desc = "Set tag w" },
             -- { "<leader>D", "<cmd>Grapple tag index=2<cr>", desc = "Set tag d" },
-            { "<leader>S", "<cmd>Grapple tag index=3<cr>", desc = "Set tag s" },
+            { "<leader>S", "<cmd>Grapple tag name=s<cr>", desc = "Set tag s" },
         }
     end,
     trouble = function()
@@ -175,7 +180,7 @@ return {
         end
 
         -- Navigation
-        map("n", "<C-z>", function()
+        map("n", "<leader>x", function()
             if vim.wo.diff then
                 vim.cmd.normal({"]c", bang = true})
             else
@@ -183,7 +188,7 @@ return {
             end
         end)
 
-        map("n", "<C-x>", function()
+        map("n", "<leader>z", function()
             if vim.wo.diff then
                 vim.cmd.normal({"[c", bang = true})
             else
@@ -250,6 +255,7 @@ return {
     dap = function()
         local dap = require("dap")
         local dap_widgets = require("dap.ui.widgets")
+        local fzf = require("fzf-lua")
 
         vim.cmd([[
             autocmd FileType dap-float nnoremap <buffer><silent> q <cmd>close!<CR>
@@ -262,9 +268,14 @@ return {
         vim.keymap.set("n", "!", dap.step_over)
         vim.keymap.set("n", '"', dap.step_into)
         vim.keymap.set("n", "#", dap.step_out)
+        vim.keymap.set("n", "¤", dap.pause)
+        vim.keymap.set("n", "<leader>§", dap.terminate)
         vim.keymap.set("n", "<leader>b", dap.toggle_breakpoint)
         vim.keymap.set("n", "<leader>ep", dap.repl.toggle)
         vim.keymap.set("n", "<leader>er", dap.run_last)
+
+        vim.keymap.set("n", "<leader>eb", fzf.dap_breakpoints)
+        vim.keymap.set("n", "<leader>ef", fzf.dap_frames)
 
         vim.keymap.set({"n", "v"}, "+", dap_widgets.hover)
 
@@ -280,10 +291,10 @@ return {
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
         end)
-        vim.keymap.set("n", "<C-'>", function()
+        vim.keymap.set("n", "<C-x>", function()
             term_util.open_terminal(2, "DebugTerminal")
         end)
-        vim.keymap.set("n", "<C-n>", "<cmd>ToggleTerm count=1 direction=float<cr>")
+        vim.keymap.set("n", "<C-z>", "<cmd>ToggleTerm count=1 direction=float<cr>")
 
         vim.cmd('autocmd! TermOpen term://*toggleterm#* lua set_terminal_keymaps()')
 
@@ -344,5 +355,15 @@ return {
     conform = function()
         local conform = require("conform")
         vim.keymap.set("n", "<leader>=", conform.format)
+    end,
+    oil = function()
+        return {
+            ["g?"] = { "actions.show_help", mode = "n" },
+            ["<CR>"] = "actions.select",
+            ["<C-c>"] = { "actions.close", mode = "n" },
+            ["<C-l>"] = "actions.refresh",
+            ["-"] = { "actions.parent", mode = "n" },
+            ["g."] = { "actions.toggle_hidden", mode = "n" },
+        }
     end,
 }

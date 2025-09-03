@@ -1,16 +1,8 @@
 return {
     "tpope/vim-sleuth",
     "tpope/vim-surround",
-    "tpope/vim-commentary",
-    "tpope/vim-vinegar",
     "tpope/vim-eunuch",
-    {
-        "cappyzawa/trim.nvim",
-        opts = {
-            notifications = false,
-            highlight = true,
-        },
-    },
+    "thirtythreeforty/lessspace.vim",
     {
         "folke/trouble.nvim",
         opts = {},
@@ -22,7 +14,6 @@ return {
         config = function()
             require("conform").setup({
                 formatters_by_ft = {
-                    rust = { "rustfmt", lsp_format = "fallback" },
                     javascript = { "prettierd", "prettier", stop_after_first = true },
                     html = { "xmlformatter" },
                     xml = { "xmlformatter" },

@@ -49,15 +49,15 @@ return {
             close_on_exit = true,
         },
     },
-    {
-        "OXY2DEV/markview.nvim",
-        lazy = false,
-        opts = {
-            preview = {
-                icon_provider = "devicons",
-            },
-        },
-    },
+    -- {
+    --     "OXY2DEV/markview.nvim",
+    --     lazy = false,
+    --     opts = {
+    --         preview = {
+    --             icon_provider = "devicons",
+    --         },
+    --     },
+    -- },
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",

@@ -25,7 +25,13 @@ function on_new_line(a1, a2, lang)
     npairs.add_rule(
         Rule(a1, a2, lang)
             :use_key("<Cr>")
-            :replace_endpair(function() return "<BS><Cr>{<Cr><Up><Right><Cr>" end, true)
+            :replace_endpair(function(opts)
+                if string.match(opts.line, "^%s*{") then
+                    return "<C-g>u<CR><C-c>O"
+                else
+                    return "<BS><Cr>{<Cr><Up><Right><Cr>"
+                end
+            end, true)
     )
 end
 

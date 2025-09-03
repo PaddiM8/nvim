@@ -1,22 +1,27 @@
 local M = {}
 
 --- Rebuilds the project before starting the debug session
----@param co thread
-local function rebuild_project(co, path)
-    local spinner = require("easy-dotnet.ui-modules.spinner").new()
-    spinner:start_spinner("Building")
-    vim.fn.jobstart(string.format("dotnet build %s", path), {
-        on_exit = function(_, return_code)
-            if return_code == 0 then
-                spinner:stop_spinner("Built successfully")
-            else
-                spinner:stop_spinner("Build failed with exit code " .. return_code, vim.log.levels.ERROR)
-                error("Build failed")
-            end
-            coroutine.resume(co)
-        end,
-    })
-    coroutine.yield()
+local function rebuild_project()
+    vim.cmd("silent make")
+
+    -- Check for any error quickfix list entries
+    local qflist = vim.fn.getqflist()
+    local error_count = 0
+    for _, item in ipairs(qflist) do
+        if item.type == "e" then
+            error_count = error_count + 1
+        end
+    end
+
+    if error_count > 0 then
+        if error_count > 1 then
+            vim.cmd("copen")
+        end
+
+        return false
+    end
+
+    return true
 end
 
 M.get_env = function(dll)
@@ -30,6 +35,26 @@ M.get_cwd = function(dll)
     return dll.relative_project_path
 end
 
+M.get_args = function(dll)
+    local launch_settings = dll.relative_project_path .. "/Properties" .. "/launchSettings.json"
+      local stat = vim.loop.fs_stat(launch_settings)
+      if stat == nil then
+          return nil
+      end
+
+      local success, result = pcall(vim.fn.json_decode, vim.fn.readfile(launch_settings, ""))
+      if not success then
+          return nil
+      end
+
+      local launch_profile = result.profiles[project_name]
+      if launch_profile == nil then
+          return nil
+      end
+
+      return vim.split(launch_profile.commandLineArgs, " +")
+end
+
 M.register_net_dap = function()
     local dap = require("dap")
     local dotnet = require("easy-dotnet")
@@ -37,7 +62,7 @@ M.register_net_dap = function()
 
     local function ensure_dll()
         if debug_dll == nil then
-            debug_dll = dotnet.get_debug_dll()
+            debug_dll = dotnet.get_debug_dll(true)
         end
 
         return debug_dll
@@ -46,7 +71,7 @@ M.register_net_dap = function()
     for _, value in ipairs({ "cs", "fsharp" }) do
         dap.configurations[value] = {
             {
-                type = "coreclr",
+                type = "vsdbg",
                 name = "Program",
                 request = "launch",
                 clientID = "vscode",
@@ -54,31 +79,29 @@ M.register_net_dap = function()
                 console = "integratedTerminal",
                 env = function()
                     ensure_dll()
-                    M.get_env(debug_dll)
+                    return M.get_env(debug_dll)
                 end,
                 program = function()
-                    local co = coroutine.running()
+                    ensure_dll()
                     if debug_dll == nil then
                         return
                     end
 
-                    rebuild_project(co, debug_dll.project_path)
+                    if not rebuild_project() then
+                        return dap.ABORT
+                    end
+
                     return debug_dll.relative_dll_path
                 end,
                 cwd = function()
                     ensure_dll()
-                    M.get_cwd(debug_dll)
+                    return M.get_cwd(debug_dll)
+                end,
+                args = function()
+                    ensure_dll()
+                    return M.get_args(debug_dll)
                 end,
             },
-            {
-                type = "coreclr",
-                name = "Test",
-                request = "attach",
-                processId = function()
-                    local res = require("easy-dotnet").experimental.start_debugging_test_project()
-                    return res.process_id
-                end
-            }
         }
     end
 
@@ -87,7 +110,7 @@ M.register_net_dap = function()
     end
 
     -- netcoredbg (for neotest)
-    dap.adapters.coreclr = {
+    dap.adapters.netcoredbg = {
         type = "executable",
         command = "netcoredbg",
         args = {"--interpreter=vscode"}
@@ -97,7 +120,7 @@ M.register_net_dap = function()
     local config_dir = vim.fn.stdpath("config")
     local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
     local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
-    dap.adapters.coreclr = {
+    dap.adapters.vsdbg = {
         type="executable",
         command = vsdbg_path,
         args = { "--interpreter=vscode", "--engineLogging" },
