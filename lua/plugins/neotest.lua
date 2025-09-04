@@ -1,10 +1,15 @@
 local function configure_dotnet()
-    return require("neotest-dotnet")({
-        dap = {
-            args = { justMyCode = false },
-            adapter_name = "coreclr",
-        },
-        discovery_root = "solution",
+    -- return require("neotest-dotnet")({
+    --     dap = {
+    --         args = { justMyCode = false },
+    --         adapter_name = "coreclr",
+    --     },
+    --     discovery_root = "solution",
+    -- })
+    return require("neotest-vstest")({
+        dap_settings = {
+            type = "netcoredbg",
+        }
     })
 end
 
@@ -17,7 +22,8 @@ return {
             "nvim-lua/plenary.nvim",
             "antoinemadec/FixCursorHold.nvim",
             "nvim-treesitter/nvim-treesitter",
-            "Issafalcon/neotest-dotnet",
+            -- "Issafalcon/neotest-dotnet",
+            "nsidorenco/neotest-vstest"
         },
         config = function()
             local neotest = require("neotest")
