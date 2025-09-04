@@ -57,13 +57,10 @@ return {
     {
         "seblj/roslyn.nvim",
         ft = "cs",
-        opts = {
-            config = {
-                -- on_attach = function(client, bufnr)
-                --     require("workspace-diagnostics").populate_workspace_diagnostics(client, bufnr)
-                -- end,
-                filewatching = "off",
-                filetypes = {"cs", "fs"},
+        config = function()
+            local roslyn = require("roslyn")
+            roslyn.setup()
+            vim.lsp.config("roslyn", {
                 settings = {
                     ["csharp|completion"] = {
                         dotnet_show_completion_items_from_unimported_namespaces = true,
@@ -74,8 +71,8 @@ return {
                         dotnet_compiler_diagnostics_scope = "fullSolution",
                     },
                 },
-            },
-        }
+            })
+        end,
     },
     {
         "GustavEikaas/easy-dotnet.nvim",

@@ -60,6 +60,13 @@ vim.cmd[[
 -- auto save
 vim.opt.autowrite = true
 vim.cmd([[au BufLeave * silent! wall]])
+vim.api.nvim_create_autocmd("BufLeave", {
+  callback = function()
+    if vim.bo.buftype == "" and ft ~= "dap-terminal" then
+      vim.cmd("silent! wall")
+    end
+  end,
+})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "cs",

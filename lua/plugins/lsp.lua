@@ -4,8 +4,6 @@ return {
         dependencies = {
             "williamboman/mason-lspconfig.nvim",
         },
-        config = function()
-        end
     },
     "mfussenegger/nvim-dap",
     {
