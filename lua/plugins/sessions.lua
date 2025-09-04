@@ -25,6 +25,12 @@ return {
                 "~/downloads",
                 "/",
             },
+            bypass_session_save_file_types = {
+                "dap-view",
+                "dap-view-term",
+                "dap-repl",
+                "dap-terminal",
+            },
             no_restore_cmds = {
                 function()
                     require("oil").setup(oil_opts)

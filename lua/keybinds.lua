@@ -1,6 +1,5 @@
 function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-b>", "<cmd>ToggleTerm<cr>")
-    vim.keymap.set("t", "<C-x>", "<cmd>ToggleTerm<cr>")
     vim.keymap.set("t", "<C-z>", "<cmd>ToggleTerm<cr>")
 
     vim.keymap.set("t", "jk", "<C-\\><C-n>")
@@ -9,6 +8,27 @@ function _G.set_terminal_keymaps()
     vim.keymap.set("t", "<C-k>", "<cmd>wincmd k<cr>")
     vim.keymap.set("t", "<C-l>", "<cmd>wincmd l<cr>")
 end
+
+function set_dap_console_window_keymaps()
+    local opts = { buffer = true, silent = true }
+
+    vim.keymap.set("i", "jk", "<Esc>", opts)
+    vim.keymap.set("i", "<C-h>", "<cmd>wincmd h<CR>", opts)
+    vim.keymap.set("i", "<C-j>", "<cmd>wincmd j<CR>", opts)
+    vim.keymap.set("i", "<C-k>", "<cmd>wincmd k<CR>", opts)
+    vim.keymap.set("i", "<C-l>", "<cmd>wincmd l<CR>", opts)
+    _G.set_terminal_keymaps()
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dap-repl",
+  callback = set_dap_console_window_keymaps,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "dap-console",
+  callback = set_dap_console_window_keymaps,
+})
 
 return {
     basics = function()
@@ -286,13 +306,13 @@ return {
           dap_widgets.centered_float(dap_widgets.threads)
         end)
     end,
+    dap_view = function()
+        vim.keymap.set("n", "<C-x>", "<cmd>DapViewToggle<cr>")
+    end,
     ui = function()
         local term_util = require("util.toggleterm")
         vim.keymap.set("n", "<C-b>", function()
             term_util.open_terminal(1, "Terminal")
-        end)
-        vim.keymap.set("n", "<C-x>", function()
-            term_util.open_terminal(2, "DebugTerminal")
         end)
         vim.keymap.set("n", "<C-z>", "<cmd>ToggleTerm count=1 direction=float<cr>")
 

@@ -31,25 +31,79 @@ return {
                 linehl = "",
                 numhl = "",
             })
-
-            -- use toggleterm as integrated terminal
-            dap.defaults.fallback.terminal_win_cmd = function()
-                require("util.toggleterm").open_terminal(2, "DebugTerminal")
-
-                return vim.api.nvim_get_current_buf(), vim.api.nvim_get_current_win()
-            end
-
-            -- automatically close the integrated terminal on program exit
-            -- dap.listeners.after.event_initialized["custom.terminal-autoclose"] = function(session)
-            --     session.on_close["custom.terminal-autoclose"] = function()
-            --         for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            --             local bufname = vim.api.nvim_buf_get_name(buf)
-            --             if string.find(bufname, "%[dap%-terminal%]") then
-            --                 vim.api.nvim_buf_delete(buf, { force = true })
-            --             end
-            --         end
-            --     end
-            -- end
         end
+    },
+    {
+        "igorlfs/nvim-dap-view",
+        config = function()
+            require("keybinds").dap_view()
+
+            local dap_view = require("dap-view")
+            dap_view.setup({
+                winbar = {
+                    show = true,
+                    sections = { "console", "watches", "scopes", "exceptions", "threads", "repl" },
+                    default_section = "console",
+                    base_sections = {
+                        console = {
+                            keymap = "C",
+                            label = "Console [C]",
+                            short_label = "󰆍 [C]",
+                            action = function()
+                                require("dap-view.term").show()
+                            end,
+                        },
+                        scopes = {
+                            keymap = "S",
+                            label = "Scopes [S]",
+                            short_label = "󰂥 [S]",
+                            action = function()
+                                require("dap-view.views").switch_to_view("scopes")
+                            end,
+                        },
+                        exceptions = {
+                            keymap = "E",
+                            label = "Exceptions [E]",
+                            short_label = "󰢃 [E]",
+                            action = function()
+                                require("dap-view.views").switch_to_view("exceptions")
+                            end,
+                        },
+                        watches = {
+                            keymap = "W",
+                            label = "Watches [W]",
+                            short_label = "󰛐 [W]",
+                            action = function()
+                                require("dap-view.views").switch_to_view("watches")
+                            end,
+                        },
+                        threads = {
+                            keymap = "T",
+                            label = "Threads [T]",
+                            short_label = "󱉯 [T]",
+                            action = function()
+                                require("dap-view.views").switch_to_view("threads")
+                            end,
+                        },
+                        repl = {
+                            keymap = "R",
+                            label = "REPL [R]",
+                            short_label = "󰯃 [R]",
+                            action = function()
+                                require("dap-view.repl").show()
+                            end,
+                        },
+                        sessions = {
+                            keymap = "K",
+                            label = "Sessions [K]",
+                            short_label = " [K]",
+                            action = function()
+                                require("dap-view.views").switch_to_view("sessions")
+                            end,
+                        },
+                    },
+                },
+            })
+        end,
     },
 }
