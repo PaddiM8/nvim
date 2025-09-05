@@ -35,7 +35,7 @@ vim.opt.shellpipe = "| write "
 vim.opt.hidden = true -- for toggleterm.nvim
 vim.opt.cinoptions = "(s,m1" -- prevent odd indentation for closing parentheses
 vim.opt.smartindent = false
-vim.g.netrw_keepdir = 1
+vim.o.autochdir = true
 
 vim.g.lessspace_blacklist = { "diff", "md" };
 
@@ -61,11 +61,11 @@ vim.cmd[[
 vim.opt.autowrite = true
 vim.cmd([[au BufLeave * silent! wall]])
 vim.api.nvim_create_autocmd("BufLeave", {
-  callback = function()
-    if vim.bo.buftype == "" and ft ~= "dap-terminal" then
-      vim.cmd("silent! wall")
-    end
-  end,
+    callback = function()
+        if vim.bo.buftype == "" and ft ~= "dap-terminal" then
+            vim.cmd("silent! wall")
+        end
+    end,
 })
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -125,9 +125,9 @@ vim.cmd([[
 
 -- close quickfix list on enter
 vim.api.nvim_create_autocmd(
-  "FileType", {
-  pattern={"qf"},
-  command=[[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
+    "FileType", {
+        pattern={"qf"},
+        command=[[nnoremap <buffer> <CR> <CR>:cclose<CR>]]})
 
 -- start in insert mode in terminals
 vim.cmd[[autocmd BufWinEnter,WinEnter term://* startinsert]]
