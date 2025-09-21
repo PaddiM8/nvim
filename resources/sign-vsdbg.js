@@ -1,9 +1,3 @@
-var vsda_location = "/opt/visual-studio-code/resources/app/node_modules.asar.unpacked/vsda/build/Release/vsda.node";
-var a = require(vsda_location);
-var signer = new a.signer();
-process.argv.forEach(function (value, index, array) {
-    if (index >= 2) {
-        var r = signer.sign(value);
-        console.log(r);
-    }
-});
+const vsdaLocation = "/opt/visual-studio-code/resources/app/node_modules.asar.unpacked/vsda/build/Release/vsda.node";
+var signature = require(vsdaLocation).signer().sign(process.argv[2]);
+console.log(signature);

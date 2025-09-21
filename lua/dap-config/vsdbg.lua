@@ -2,11 +2,6 @@ local M = {}
 local utils = require("dap.utils")
 local rpc = require("dap.rpc")
 
-local function send_payload(client, payload)
-    local msg = rpc.msg_with_content_length(vim.json.encode(payload))
-    client.write(msg)
-end
-
 M.RunHandshake = function(self, request_payload)
     local signResult = io.popen("node " .. vim.fn.stdpath("config") .. "/resources/sign-vsdbg.js " .. request_payload.arguments.value)
     if signResult == nil then
@@ -28,7 +23,8 @@ M.RunHandshake = function(self, request_payload)
         },
     }
 
-    send_payload(self.client, response)
+    local msg = rpc.msg_with_content_length(vim.json.encode(response))
+    self.client.write(msg)
 end
 
 return M

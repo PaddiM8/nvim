@@ -1,55 +1,3 @@
-local function configure_terminal(path, action, args)
-    local dotnet = require("easy-dotnet")
-    local project = require("easy-dotnet.parsers.csproj-parse")
-        .get_project_from_project_file(path)
-    local dll_path = {
-        project_name = project.name,
-        dll = project.get_dll_path(),
-        relative_project_path = vim.fs.dirname(project.path),
-    }
-
-    local commands = {
-        run = function()
-            return string.format("dotnet run --project %s %s", path, args)
-        end,
-        test = function()
-            return string.format("dotnet test %s %s", path, args)
-        end,
-        restore = function()
-            return string.format("dotnet restore %s %s", path, args)
-        end,
-        build = function()
-            return string.format("dotnet build %s %s", path, args)
-        end
-    }
-
-    -- local relative_solution_path = require("easy-dotnet")
-    --     .try_get_selected_solution()
-    --     .path
-    -- local solution_path = vim.fn.getcwd() .. "/" .. vim.fs.dirname(relative_solution_path)
-
-    local command = commands[action]() .. "\r"
-    command = command:gsub("%s+$", "")
-    local task = require("overseer").new_task({
-        strategy = {
-            "toggleterm",
-            use_shell = false,
-            count = 2,
-            direction = "horizontal",
-            open_on_start = true,
-        },
-        name = action,
-        cmd = command,
-        cwd = dll_path.relative_project_path,
-        components = {
-            { "on_complete_dispose", timeout = 30 },
-            "default",
-            { "unique", replace = true },
-        },
-    })
-    task:start()
-end
-
 return {
     {
         dir = "~/.local/share/nvim/elk",
@@ -58,8 +6,30 @@ return {
         "seblj/roslyn.nvim",
         ft = "cs",
         config = function()
+            vim.api.nvim_set_hl(0, "@lsp.type.stringEscapeCharacter.cs", { link = "Delimiter" })
+
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonComment.cs", { link = "Comment" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonNumber.cs", { link = "Number" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonString.cs", { link = "String" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonKeyword.cs", { link = "Keyword" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonOperator.cs", { link = "Operator" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonArray.cs", { link = "Delimiter" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonObject.cs", { link = "Delimiter" })
+            vim.api.nvim_set_hl(0, "@lsp.type.jsonPropertyName.cs", { link = "@variable" })
+
+            vim.api.nvim_set_hl(0, "@lsp.type.regexComment.cs", { link = "Comment" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexCharacterClass.cs", { link = "SpecialChar" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexAnchor.cs", { link = "Delimiter" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexQuantifier.cs", { link = "Number" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexGrouping.cs", { link = "Delimiter" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexAlternation.cs", { link = "Operator" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexText.cs", { link = "String" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexSelfEscapedCharacter.cs", { link = "SpecialChar" })
+            vim.api.nvim_set_hl(0, "@lsp.type.regexOtherEscape.cs", { link = "SpecialChar" })
+
             local roslyn = require("roslyn")
             roslyn.setup()
+
             vim.lsp.config("roslyn", {
                 settings = {
                     ["csharp|completion"] = {
@@ -79,12 +49,63 @@ return {
         dependencies = {
             "nvim-lua/plenary.nvim",
         },
-        opts = {
-            picker = "fzf",
-            auto_bootstrap_namespace = {
-                type = "file_scoped",
-                enabled = true
-            },
-        },
+        config = function()
+            local config_dir = vim.fn.stdpath("config")
+            local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
+            local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
+
+            local dotnet = require("easy-dotnet")
+            dotnet.setup({
+                picker = "fzf",
+                debugger = {
+                    bin_path = vsdbg_path,
+                },
+                auto_bootstrap_namespace = {
+                    type = "file_scoped",
+                    enabled = true
+                },
+            })
+
+            local dap = require("dap")
+            local dotnet = require("easy-dotnet")
+            local debugger_conf = dap.configurations["cs"] or {}
+            vim.list_extend(debugger_conf, {
+                {
+                    type = "easy-dotnet",
+                    name = "easy-dotnet",
+                    request = "attach",
+                    select_project = dotnet.prepare_debugger,
+                    clientID = "vscode",
+                    clientName = "Visual Studio Code",
+                    console = "integratedTerminal",
+                }
+            })
+            dap.configurations["cs"] = debugger_conf
+
+            -- vsdbg
+            dap.adapters["easy-dotnet"] = function(callback) callback({
+                type = "server",
+                host = "127.0.0.1",
+                port = 8086,
+
+                id = "coreclr",
+                options = {
+                    internalTerminal = true,
+                },
+                runInTerminal = true,
+                reverse_request_handlers = {
+                    handshake = require("dap-config.vsdbg").RunHandshake,
+                },
+            }) end
+
+            -- netcoredbg (for neotest)
+            dap.adapters.netcoredbg = {
+                type = "executable",
+                command = "netcoredbg",
+                args = {
+                    "--interpreter=vscode"
+                },
+            }
+        end,
     },
 }

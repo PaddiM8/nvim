@@ -5,7 +5,7 @@ return {
             local dap = require("dap")
 
             require("keybinds").dap()
-            require("dap-config.dotnet").register_net_dap()
+            -- require("dap-config.dotnet").register_net_dap()
 
             vim.fn.sign_define("DapBreakpoint", {
                 text = "",

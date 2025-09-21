@@ -109,30 +109,23 @@ M.register_net_dap = function()
         debug_dll = nil
     end
 
-    -- netcoredbg (for neotest)
-    dap.adapters.netcoredbg = {
-        type = "executable",
-        command = "netcoredbg",
-        args = {"--interpreter=vscode"}
-    }
-
     -- vsdbg
-    local config_dir = vim.fn.stdpath("config")
-    local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
-    local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
-    dap.adapters.vsdbg = {
-        type="executable",
-        command = vsdbg_path,
-        args = { "--interpreter=vscode", "--engineLogging" },
-        id = "coreclr",
-        options = {
-            internalTerminal = true,
-        },
-        runInTerminal = true,
-        reverse_request_handlers = {
-            handshake = require("dap-config.vsdbg").RunHandshake,
-        },
-    }
+    -- local config_dir = vim.fn.stdpath("config")
+    -- local get_vsdbg_path = config_dir .. "/resources/get-vsdbg-path.elk"
+    -- local vsdbg_path = vim.fn.system("elk " .. get_vsdbg_path)
+    -- dap.adapters.vsdbg = {
+    --     type="executable",
+    --     command = vsdbg_path,
+    --     args = { "--interpreter=vscode", "--engineLogging" },
+    --     id = "coreclr",
+    --     options = {
+    --         internalTerminal = true,
+    --     },
+    --     runInTerminal = true,
+    --     reverse_request_handlers = {
+    --         handshake = require("dap-config.vsdbg").RunHandshake,
+    --     },
+    -- }
 end
 
 return M
